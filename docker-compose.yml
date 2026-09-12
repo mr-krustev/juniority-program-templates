@@ -1,3 +1,4 @@
+# docker compose up --build --watch
 services:
   postgres:
     image: postgres:16-alpine
@@ -17,16 +18,48 @@ services:
 
   backend:
     build: ./backend
+    command: npm run dev
     ports:
       - "3000:3000"
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_USER: ${POSTGRES_USER:-app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-app}
+      POSTGRES_DB: ${POSTGRES_DB:-app}
     depends_on:
       postgres:
         condition: service_healthy
+    develop:
+      watch:
+        - action: sync
+          path: ./backend
+          target: /app
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./backend/package.json
+        - action: rebuild
+          path: ./backend/package-lock.json
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      target: development-dependencies-env
+    command: npm run dev -- --host 0.0.0.0 --port 5173
     ports:
-      - "8080:3000"
+      - "5173:5173"
+    develop:
+      watch:
+        - action: sync
+          path: ./frontend
+          target: /app
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./frontend/package.json
+        - action: rebuild
+          path: ./frontend/package-lock.json
 
 volumes:
   postgres_data:
