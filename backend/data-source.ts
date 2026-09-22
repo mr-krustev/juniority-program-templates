@@ -1,4 +1,7 @@
 import { DataSource } from "typeorm";
+import { Payment } from "./src/entities/Payment";
+import { PaymentsJob } from "./src/entities/PaymentsJob";
+import { CreatePayments1740000000000 } from "./src/migrations/1740000000000-CreatePayments";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -7,6 +10,7 @@ export const AppDataSource = new DataSource({
   username: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DB,
-  entities: [],
+  entities: [Payment, PaymentsJob],
+  migrations: [CreatePayments1740000000000],
   synchronize: false,
 });

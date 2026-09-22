@@ -2,7 +2,8 @@
   "private": true,
   "scripts": {
     "start": "tsx server.ts",
-    "dev": "tsx watch server.ts"
+    "dev": "tsx watch server.ts",
+    "seed": "tsx src/seeds/seed-payments.ts"
   },
   "dependencies": {
     "koa": "^3.2.1",
