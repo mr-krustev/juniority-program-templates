@@ -46,7 +46,7 @@ services:
         condition: service_healthy
     develop:
       watch:
-        - action: sync
+        - action: sync+restart
           path: ./backend
           target: /app
           ignore:
@@ -65,7 +65,7 @@ services:
       - "5173:5173"
     develop:
       watch:
-        - action: sync
+        - action: sync+restart
           path: ./frontend
           target: /app
           ignore:
